@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.jackson2.SecurityJackson2Modules;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
 import org.springframework.security.oauth2.core.ClientAuthenticationMethod;
+import org.springframework.security.oauth2.core.oidc.OidcScopes;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClient;
 import org.springframework.security.oauth2.server.authorization.client.RegisteredClientRepository;
 import org.springframework.security.oauth2.server.authorization.jackson2.OAuth2AuthorizationServerJackson2Module;
@@ -194,20 +195,21 @@ public class JpaRegisteredClientRepository implements RegisteredClientRepository
                   //.authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                   //.authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                   //.authorizationGrantType(AuthorizationGrantType.REFRESH_TOKEN)
-                  .redirectUri("http://localhost:3000/api/auth/callback")
+                  .redirectUri("http://127.0.0.1:3000/api/auth/callback")
                   /*.redirectUri("http://127.0.0.1:8080/login/oauth2/code/messaging-client-oidc")
                   .redirectUri("http://127.0.0.1:8080/authorized")
                   .scope(OidcScopes.OPENID)
                   .scope(OidcScopes.PROFILE)
                   .scope("message.read")
                   .scope("message.write")*/
+                  .scope(OidcScopes.OPENID)
                   .scope(SCOPE_SECUREAPI)
                   .clientSettings(ClientSettings.builder()
                           .requireAuthorizationConsent(false)
                           .build())
                   .tokenSettings(TokenSettings.builder()
                           .accessTokenFormat(OAuth2TokenFormat.REFERENCE)
-                          //.accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
+                          .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
                           .accessTokenTimeToLive(Duration.ofDays(7))
                           .refreshTokenTimeToLive(Duration.ofDays(14))
                           .build())

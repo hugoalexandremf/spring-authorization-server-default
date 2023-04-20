@@ -114,7 +114,8 @@ public class AuthorizationServerConfig {
                   }))
                   // Redirect to the login page when not authenticated from the authorization endpoint
                   .exceptionHandling((exceptions) -> exceptions
-                          .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login")));
+                          .authenticationEntryPoint(new LoginUrlAuthenticationEntryPoint("/login"))
+                  );
                   /*.authenticationManager(authenticationManagerBuilder.build())
                   .authenticationProvider(daoAuthenticationProvider);*/
 
