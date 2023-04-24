@@ -46,7 +46,11 @@ public class CustomOpaqueTokenIntrospector implements OpaqueTokenIntrospector {
           OAuth2Authorization oAuth2Authorization = customOAuth2Authorization.getoAuth2Authorization();
           RegisteredClient registeredClient = customOAuth2Authorization.getRegisteredClient();
 
-          User user = dbService.getUserByUsername(registeredClient.getId());
+          LOG.info("oAuth2Authorization" + oAuth2Authorization.getPrincipalName());
+          LOG.info("registeredClient:" + registeredClient);
+
+          //User user = dbService.getUserByUsername(registeredClient.getId());
+          User user = dbService.getUserByUsername(oAuth2Authorization.getPrincipalName());
 
           Collection<GrantedAuthority> authorities = new ArrayList<>();
           Map<String, Object> claims = new HashMap<>();

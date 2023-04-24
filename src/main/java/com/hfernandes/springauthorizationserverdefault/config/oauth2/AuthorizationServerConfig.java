@@ -17,8 +17,10 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configuration.OAuth2AuthorizationServerConfiguration;
 import org.springframework.security.oauth2.server.authorization.config.annotation.web.configurers.OAuth2AuthorizationServerConfigurer;
+import org.springframework.security.oauth2.server.authorization.oidc.web.authentication.OidcClientRegistrationAuthenticationConverter;
 import org.springframework.security.oauth2.server.authorization.settings.AuthorizationServerSettings;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.LoginUrlAuthenticationEntryPoint;
 import org.springframework.security.web.authentication.logout.LogoutFilter;
 import org.springframework.security.web.util.matcher.RequestMatcher;
@@ -50,7 +52,13 @@ public class AuthorizationServerConfig {
 
           //customize token endpoint in order to receive additional parameters such as deviceID, oldClientID and oldClientSecret
           authorizationServerConfigurer
-                  .oidc(Customizer.withDefaults())
+                  //.oidc(Customizer.withDefaults())
+                  .oidc(oidc -> oidc
+                          .userInfoEndpoint(userInfoEndpoint ->
+                                  userInfoEndpoint
+                                          .userInfoRequestConverter(new CustomOidcClientRegistrationAuthenticationConverter())
+                          )
+                  )
                   .authorizationServerMetadataEndpoint(Customizer.withDefaults())
                   .authorizationEndpoint((authorizationEndpoint) -> {
                        authorizationEndpoint.authenticationProvider(daoAuthenticationProvider);
