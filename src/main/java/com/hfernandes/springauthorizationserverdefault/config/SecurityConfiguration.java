@@ -95,7 +95,7 @@ public class SecurityConfiguration {
           return httpSecurity.build();
      }*/
 
-     @Bean
+     /*@Bean
      @Order(4)
      public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
           AuthenticationManagerBuilder authenticationManagerBuilder = new AuthenticationManagerBuilder(objectPostProcessor);
@@ -108,6 +108,67 @@ public class SecurityConfiguration {
                   // Form login handles the redirect to the login page from the
                   // authorization server filter chain
                   .formLogin(Customizer.withDefaults())
+                  .authenticationManager(authenticationManagerBuilder.build());
+
+          return http.build();
+     }*/
+
+     //SecurityFilterChain for /eusignuserapi and /mappapi endpoints - OAuth2
+     /*@Bean
+     @Order(4)
+     public SecurityFilterChain oauth2SecurityFilterChain(HttpSecurity httpSecurity) throws Exception {
+          httpSecurity
+                  .csrf().disable()
+                  .securityMatcher("/secureapi/v1/**")
+                  .authorizeHttpRequests((authz) -> authz
+                          .anyRequest().authenticated()
+                  );
+                  *//*.requestMatchers()
+                  .antMatchers("/v1/eusignuserapi/**", "/v1/mappapi/**")
+                  .and()
+                  .authorizeRequests()
+                  .anyRequest().authenticated();*//*
+
+          return httpSecurity.build();
+     }*/
+
+     //default SecurityFilterChain for all endpoints except the ones described above
+     @Bean
+     @Order(4)
+     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+          AuthenticationManagerBuilder authenticationManagerBuilder = new AuthenticationManagerBuilder(objectPostProcessor);
+          authenticationManagerBuilder.userDetailsService(customUserDetailsService);
+
+          http
+                  //.csrf().disable()
+                  //.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                  //.csrf().csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                  /*.csrf(csrf ->
+                          csrf
+                                  .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                  )*/
+                  .csrf().disable()
+                  //.and()
+                  .authorizeHttpRequests((authorize) -> authorize
+                          .requestMatchers("/login", "favicon.ico", "/bundles/*", "/error**").permitAll()
+                          .requestMatchers(HttpMethod.POST, "/login").permitAll()
+                          .anyRequest().authenticated()
+                  )
+                  // Form login handles the redirect to the login page from the
+                  // authorization server filter chain
+                  //.formLogin(Customizer.withDefaults())
+                  .formLogin(formLogin ->
+                                  formLogin
+                                          .loginPage("/login").permitAll()
+                                          .loginProcessingUrl("/login").permitAll()
+                                          .defaultSuccessUrl("/")
+                                  /*.successForwardUrl("/")
+                                  .failureForwardUrl("/login?error")*/
+                  )
+                  .logout(logout ->
+                          logout
+                                  .logoutSuccessUrl("/login").permitAll()
+                  )
                   .authenticationManager(authenticationManagerBuilder.build());
 
           return http.build();

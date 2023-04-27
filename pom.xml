@@ -81,7 +81,66 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                </plugin>
+
+               <plugin>
+                    <groupId>com.github.eirslett</groupId>
+                    <artifactId>frontend-maven-plugin</artifactId>
+                    <!-- NB! Set <version> to the latest released version of frontend-maven-plugin, like in README.md -->
+                    <version>1.6</version>
+
+                    <configuration>
+                         <installDirectory>target</installDirectory>
+                    </configuration>
+
+                    <executions>
+                         <execution>
+                              <id>install node and npm</id>
+                              <goals>
+                                   <goal>install-node-and-npm</goal>
+                              </goals>
+                              <configuration>
+                                   <skip>false</skip>
+                                   <nodeVersion>v16.14.0</nodeVersion>
+                              </configuration>
+                         </execution>
+
+                         <execution>
+                              <id>npm ci</id>
+                              <goals>
+                                   <goal>npm</goal>
+                              </goals>
+                              <!-- Optional configuration which provides for running any npm command -->
+                              <configuration>
+                                   <skip>false</skip>
+                                   <arguments>ci</arguments>
+                              </configuration>
+                         </execution>
+
+                         <execution>
+                              <id>webpack build</id>
+                              <goals>
+                                   <goal>webpack</goal>
+                              </goals>
+
+                              <!-- optional: the default phase is "generate-resources" -->
+                              <phase>generate-resources</phase>
+
+                              <configuration>
+                                   <!-- optional: if not specified, it will run webpack's default
+                                   build (and you can remove this whole <configuration> section.) -->
+                                   <!--<arguments>-p</arguments>-->
+                                   <skip>false</skip>
+                                   <arguments>--config webpack.prod.js</arguments>
+                              </configuration>
+                         </execution>
+                    </executions>
+               </plugin>
           </plugins>
+          <resources>
+               <resource>
+                    <directory>src/main/resources</directory>
+               </resource>
+          </resources>
      </build>
 
 </project>

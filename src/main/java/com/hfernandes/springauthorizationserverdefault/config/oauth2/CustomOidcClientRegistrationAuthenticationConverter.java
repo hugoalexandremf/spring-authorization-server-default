@@ -37,6 +37,7 @@ public class CustomOidcClientRegistrationAuthenticationConverter implements Auth
                     clientRegistration = this.clientRegistrationHttpMessageConverter.read(
                             OidcClientRegistration.class, new ServletServerHttpRequest(request));
                } catch (Exception ex) {
+                    LOG.info("exception:" + ex.getMessage());
                     OAuth2Error error = new OAuth2Error(
                             OAuth2ErrorCodes.INVALID_REQUEST,
                             "OpenID Client Registration Error: " + ex.getMessage(),

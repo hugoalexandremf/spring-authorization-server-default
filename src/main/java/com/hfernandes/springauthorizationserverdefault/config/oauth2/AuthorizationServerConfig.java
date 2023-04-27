@@ -1,5 +1,6 @@
 package com.hfernandes.springauthorizationserverdefault.config.oauth2;
 
+import com.hfernandes.springauthorizationserverdefault.config.oauth2.oicd.CustomOidcUserInfoAuthenticationProvider;
 import com.hfernandes.springauthorizationserverdefault.service.CustomUserDetailsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,9 @@ public class AuthorizationServerConfig {
      private ObjectPostProcessor objectPostProcessor;
      @Autowired
      private CustomUserDetailsService customUserDetailsService;
+     @Autowired
+     private JpaOAuth2AuthorizationService jpaOAuth2AuthorizationService;
+
 
      @Bean
      @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -56,7 +60,8 @@ public class AuthorizationServerConfig {
                   .oidc(oidc -> oidc
                           .userInfoEndpoint(userInfoEndpoint ->
                                   userInfoEndpoint
-                                          .userInfoRequestConverter(new CustomOidcClientRegistrationAuthenticationConverter())
+                                          //.userInfoRequestConverter(new CustomOidcClientRegistrationAuthenticationConverter())
+                                          .authenticationProvider(new CustomOidcUserInfoAuthenticationProvider(jpaOAuth2AuthorizationService))
                           )
                   )
                   .authorizationServerMetadataEndpoint(Customizer.withDefaults())
@@ -104,12 +109,12 @@ public class AuthorizationServerConfig {
                           .requestMatchers(endpointsMatcher)
                   )
                   .securityMatchers((matchers) -> matchers
-                          .requestMatchers("/v1/secureapi/**")
+                          .requestMatchers("/secureapi/v1/**")
                   )
                   /*.securityMatcher(endpointsMatcher)
                   .securityMatcher("/v1/secureapi/**")*/
                   .authorizeHttpRequests((authz) -> authz
-                          .requestMatchers(HttpMethod.POST, "/v1/secureapi/**").hasAuthority("secureapi")
+                          .requestMatchers(HttpMethod.POST, "/secureapi/v1/**").hasAuthority("secureapi")
                           .anyRequest().authenticated()
                   )
                   .oauth2ResourceServer((oAuth2ResourceServerConfigurer -> {
