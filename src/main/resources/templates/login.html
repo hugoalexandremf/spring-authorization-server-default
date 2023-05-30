@@ -1,13 +1,23 @@
 <!DOCTYPE html>
-<html class="h-full bg-white">
-  <head>
-    <title>react-tailwind-demo</title>
-    <!---->
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  </head>
-  <body class="h-full">
-    <div id="root"></div>
-    <script type="text/javascript" src="bundles/login.js"></script>
-  </body>
+<head>
+    <title>authorizationserver</title>
+</head>
+<body>
+<h1>Login</h1>
+<form name='f' action="/login" method='POST'>
+    <table>
+        <tr>
+            <td>User:</td>
+            <td><input type='text' name='username' value=''></td>
+        </tr>
+        <tr>
+            <td>Password:</td>
+            <td><input type='password' name='password' /></td>
+        </tr>
+        <tr>
+            <td><input name="submit" type="submit" value="submit" /></td>
+        </tr>
+    </table>
+</form>
+</body>
 </html>

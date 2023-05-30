@@ -68,6 +68,7 @@ public class CustomOpaqueTokenIntrospector implements OpaqueTokenIntrospector {
 
           List<String> scopes = new ArrayList<>(oAuth2Authorization.getAuthorizedScopes());
           claims.put(OAuth2TokenIntrospectionClaimNames.SCOPE, scopes);
+          claims.put("profile", "test");
 
           for (String scope : scopes) {
                authorities.add(new SimpleGrantedAuthority(AUTHORITY_PREFIX + scope));
