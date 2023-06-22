@@ -26,7 +26,7 @@ public class APIRestController {
           return response;
      }
 
-     @RequestMapping(value = "/test", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+     @RequestMapping(value = "/test", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
      public void test(Principal principal) {
           LOG.info("/secureapi/v1/test");
           LOG.info("Username:{}", principal.getName());
