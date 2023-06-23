@@ -206,6 +206,8 @@ public class JpaRegisteredClientRepository implements RegisteredClientRepository
                   .scope(SCOPE_SECUREAPI)
                   .clientSettings(ClientSettings.builder()
                           .requireAuthorizationConsent(false)
+                          // proof key code exchange - pkce
+                          .requireProofKey(true)
                           .build())
                   .tokenSettings(TokenSettings.builder()
                           .accessTokenFormat(OAuth2TokenFormat.REFERENCE)
