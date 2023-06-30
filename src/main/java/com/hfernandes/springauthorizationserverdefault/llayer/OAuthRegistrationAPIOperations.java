@@ -3,6 +3,7 @@ package com.hfernandes.springauthorizationserverdefault.llayer;
 import com.hfernandes.springauthorizationserverdefault.config.oauth2.JpaRegisteredClientRepository;
 import com.hfernandes.springauthorizationserverdefault.db.model.User;
 import com.hfernandes.springauthorizationserverdefault.resource.oauthregistrationapiresource.input.RegisterClientInputResource;
+import com.hfernandes.springauthorizationserverdefault.resource.oauthregistrationapiresource.input.RegisterOAuth2ResourceServerInputResource;
 import com.hfernandes.springauthorizationserverdefault.resource.oauthregistrationapiresource.input.RegisterUserInputResource;
 import com.hfernandes.springauthorizationserverdefault.service.DBService;
 import com.hfernandes.springauthorizationserverdefault.service.PasswordSecurityService;
@@ -40,6 +41,10 @@ public class OAuthRegistrationAPIOperations {
 
      public void registerOAuth2Client(RegisterClientInputResource registerClientInputResource) {
           RegisteredClient registeredClient = jpaRegisteredClientRepository.insertClient(registerClientInputResource.getClientId(), registerClientInputResource.getClientSecret());
+     }
+
+     public void registerOAuth2ResourceServer(RegisterOAuth2ResourceServerInputResource registerOAuth2ResourceServerInputResource) {
+          RegisteredClient registeredClient = jpaRegisteredClientRepository.insertResourceServerClient(registerOAuth2ResourceServerInputResource);
      }
 
      public void registerUser(RegisterUserInputResource registerUserInputResource) {

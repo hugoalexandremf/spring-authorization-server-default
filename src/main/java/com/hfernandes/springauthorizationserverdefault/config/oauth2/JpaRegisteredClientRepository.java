@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hfernandes.springauthorizationserverdefault.auxobjects.utils.Utils;
 import com.hfernandes.springauthorizationserverdefault.db.model.Client;
 import com.hfernandes.springauthorizationserverdefault.db.repository.ClientRepository;
+import com.hfernandes.springauthorizationserverdefault.resource.oauthregistrationapiresource.input.RegisterOAuth2ResourceServerInputResource;
 import com.hfernandes.springauthorizationserverdefault.service.PasswordSecurityService;
 import com.hfernandes.springauthorizationserverdefault.service.RandomService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -208,6 +209,41 @@ public class JpaRegisteredClientRepository implements RegisteredClientRepository
                           .requireAuthorizationConsent(false)
                           // proof key code exchange - pkce
                           .requireProofKey(true)
+                          .build())
+                  .tokenSettings(TokenSettings.builder()
+                          .accessTokenFormat(OAuth2TokenFormat.REFERENCE)
+                          .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
+                          .accessTokenTimeToLive(Duration.ofDays(7))
+                          .refreshTokenTimeToLive(Duration.ofDays(14))
+                          .build())
+                  .build();
+
+          this.save(registeredClient);
+
+          return registeredClient;
+     }
+
+     public RegisteredClient insertResourceServerClient(RegisterOAuth2ResourceServerInputResource registerOAuth2ResourceServerInputResource) {
+          String registeredClientID;
+          Optional<RegisteredClient> optionalRegisteredClient;
+          do {
+               registeredClientID = randomService.generateUUID();
+               optionalRegisteredClient = getOptionalRegisteredClientById(registeredClientID);
+          } while (optionalRegisteredClient.isPresent());
+
+          RegisteredClient registeredClient = RegisteredClient.withId(registeredClientID)
+                  .clientId(Utils.normalizeToLowerCase(registerOAuth2ResourceServerInputResource.getClientId()))
+                  .clientName(Utils.normalizeToLowerCase(registerOAuth2ResourceServerInputResource.getClientId()))
+                  .clientIdIssuedAt(Instant.now())
+                  .clientSecret(passwordSecurityService.encode(registerOAuth2ResourceServerInputResource.getClientSecret()))
+                  //.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                  //.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
+                  .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
+                  .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+                  .scope(OidcScopes.OPENID)
+                  .scope(SCOPE_SECUREAPI)
+                  .clientSettings(ClientSettings.builder()
+                          .requireAuthorizationConsent(false)
                           .build())
                   .tokenSettings(TokenSettings.builder()
                           .accessTokenFormat(OAuth2TokenFormat.REFERENCE)

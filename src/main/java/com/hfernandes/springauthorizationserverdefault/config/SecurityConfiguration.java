@@ -56,11 +56,17 @@ public class SecurityConfiguration {
 
           httpSecurity
                   .csrf().disable()
-                  .securityMatcher("/v1/oauthregistrationapi/health", "/v1/oauthregistrationapi/registerClient", "/v1/oauthregistrationapi/registerUser")
+                  .securityMatcher(
+                          "/v1/oauthregistrationapi/health",
+                          "/v1/oauthregistrationapi/oauth2clients",
+                          "/v1/oauthregistrationapi/registerUser",
+                          "/v1/oauthregistrationapi/oauth2resourceservers"
+                  )
                   .authorizeHttpRequests((authz) -> authz
                           .requestMatchers(HttpMethod.GET, "/v1/oauthregistrationapi/health").permitAll()
-                          .requestMatchers(HttpMethod.POST, "/v1/oauthregistrationapi/registerClient").hasRole("ADMIN")
+                          .requestMatchers(HttpMethod.POST, "/v1/oauthregistrationapi/oauth2clients").hasRole("ADMIN")
                           .requestMatchers(HttpMethod.POST, "/v1/oauthregistrationapi/registerUser").hasRole("ADMIN")
+                          .requestMatchers(HttpMethod.POST, "/v1/oauthregistrationapi/oauth2resourceservers").hasRole("ADMIN")
                   )
                   .httpBasic()
                   .and()
