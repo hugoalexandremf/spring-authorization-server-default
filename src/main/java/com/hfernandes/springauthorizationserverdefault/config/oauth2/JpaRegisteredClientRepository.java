@@ -27,6 +27,7 @@ import org.springframework.util.StringUtils;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.*;
+import java.util.function.Consumer;
 
 @Component
 public class JpaRegisteredClientRepository implements RegisteredClientRepository {
@@ -238,16 +239,21 @@ public class JpaRegisteredClientRepository implements RegisteredClientRepository
                   .clientSecret(passwordSecurityService.encode(registerOAuth2ResourceServerInputResource.getClientSecret()))
                   //.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
                   //.clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
+                  // .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
+                  // .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
                   .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_POST)
-                  .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS)
+                  // client_secret_basic is used in introspection endpoint
+                  .clientAuthenticationMethod(ClientAuthenticationMethod.CLIENT_SECRET_BASIC)
+                  .authorizationGrantType(AuthorizationGrantType.AUTHORIZATION_CODE)
                   .scope(OidcScopes.OPENID)
                   .scope(SCOPE_SECUREAPI)
+                  .redirectUri("http://127.0.0.1:3000/api/auth/callback/authorizationserver")
                   .clientSettings(ClientSettings.builder()
                           .requireAuthorizationConsent(false)
                           .build())
                   .tokenSettings(TokenSettings.builder()
                           .accessTokenFormat(OAuth2TokenFormat.REFERENCE)
-                          .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
+                          // .accessTokenFormat(OAuth2TokenFormat.SELF_CONTAINED)
                           .accessTokenTimeToLive(Duration.ofDays(7))
                           .refreshTokenTimeToLive(Duration.ofDays(14))
                           .build())
